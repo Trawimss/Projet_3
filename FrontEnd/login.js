@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", ()=> {
          window.location.href="index.html"
       })
       .catch(error => {
-        alert('Error:', error);
+        document.getElementById("errorlogin").textContent="Email ou mot de passe incorrect !"
       });
   });
 });

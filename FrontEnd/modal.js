@@ -228,15 +228,6 @@ const formData = new FormData();
 
 sendNewData(token, formData, category)
 
-const addToWork = function(data, category) {
-  newWork = {};
-  newWork.title = data.title;
-  newWork.id = data.id;
-  newWork.category = {"id" : data.categoryId, "name" : category};
-  newWork.imageUrl = data.imageUrl;
-  work.push(newWork);
-}
-
 //API call for new work//
 
 // reset add form after work added //
@@ -256,27 +247,37 @@ function resetModalForm() {
         }
       }
 
-function sendNewData(token, formData, category) {
-  fetch("http://localhost:5678/api/works", {
-    method: "POST",
-    headers: {
-      authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        console.error("Erreur:", response.status);
-      }
-    })
-    .then ((data) => {
-      addToWork(data, category);
-      displayWorks(work,".gallery");
-      modaleGallery(work);
-      resetModalForm();
-    })
+      function sendNewData(token, formData, title, category) {
+        fetch("http://localhost:5678/api/works", {
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        })
+          .then((response) => {
+            if (response.ok) {
+              alert("Nouveau projet ajouté avec succès : ");
+              return response.json();
+            } else {
+              console.error("Erreur:", response.status);
+            }
+          })
+          .then ((data) => {
+        
+            updateWorks();
+            resetModalForm();
+          })
+      
+          .catch((error) => console.error("Erreur:", error));
+      }}
 
-    .catch((error) => console.error("Erreur:", error));
-}}
+function updateWorks(){
+  fetch("http://localhost:5678/api/works")
+  .then(response => response.json())
+  .then(works => {
+      displayWorks(works,".gallery");
+      modaleGallery(works);
+  })
+
+}
